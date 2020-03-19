@@ -1,16 +1,13 @@
 <template>
     <div class="about">
       <!-- 通过三位用算符，判断是否携带id值，低耦合表现-->
-        <h1>{{id ? '编辑' : '新建'}}物品</h1>
+        <h1>{{id ? '编辑' : '新建'}}管理员</h1>
         <el-form label-width="120px" @submit.native.prevent="save">
-            <el-form-item label="名称">
-                <el-input v-model="model.name"></el-input>
+            <el-form-item label="管理员名称">
+                <el-input v-model="model.username"></el-input>
             </el-form-item>
-            <el-form-item label="图标">
-              <el-upload class="avatar-uploader" :action="$http.defaults.baseURL + '/upload'" :show-file-list="false" :on-success="afterUpload">
-                <img v-if="model.icon" :src="model.icon" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+            <el-form-item label="密码">
+                <el-input type="text" v-model="model.password"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" native-type="submit">保存</el-button>
@@ -31,19 +28,14 @@ export default {
     }
   },
   methods: {
-    afterUpload(res) {
-      console.log(res)
-      this.$set(this.model, 'icon', res.url)
-    //   this.model.icon = res.url
-    },
     async save() {
       let res
       if (this.id) {
-        res = await this.$http.put(`rest/items/${this.id}`, this.model)
+        res = await this.$http.put(`rest/admin_users/${this.id}`, this.model)
       } else {
-        res = await this.$http.post('rest/items', this.model)
+        res = await this.$http.post('rest/admin_users', this.model)
       }
-      this.$router.push('/items/list')
+      this.$router.push('/admin_users/list')
       console.log(res)
       this.$message({
         type: 'success',
@@ -51,7 +43,7 @@ export default {
       })
     },
     async fetch() {
-      const res = await this.$http.get(`rest/items/${this.id}`)
+      const res = await this.$http.get(`rest/admin_users/${this.id}`)
       this.model = res.data
     }
   },
